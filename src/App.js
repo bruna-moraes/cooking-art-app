@@ -1,17 +1,76 @@
 import React from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
-import Provider from './context/Provider';
-import Login from './components/Login';
+import './App.css';
+import { Route, Switch } from 'react-router-dom';
+
+import Login from './pages/Login';
+
+import Recipes from './pages/Recipes';
+import RecipesDetails from './pages/RecipeDetails';
+import RecipesInProgress from './pages/RecipeInProgress';
+import DoneRecipes from './pages/DoneRecipes';
+
+import Profile from './pages/Profile';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Provider>
-        <Switch>
-          <Route exact path="/" component={ Login } />
-        </Switch>
-      </Provider>
-    </BrowserRouter>
+    <Switch>
+      <Route
+        exact
+        path="/"
+        component={ Login }
+      />
+
+      <Route
+        exact
+        path="/meals"
+        component={ Recipes }
+      />
+      <Route
+        exact
+        path="/drinks"
+        component={ Recipes }
+      />
+
+      <Route
+        exact
+        path="/meals/:id"
+        component={ RecipesDetails }
+      />
+      <Route
+        exact
+        path="/drinks/:id"
+        component={ RecipesDetails }
+      />
+
+      <Route
+        exact
+        path="/meals/:id/in-progress"
+        component={ RecipesInProgress }
+      />
+      <Route
+        exact
+        path="/drinks/:id/in-progress"
+        component={ RecipesInProgress }
+      />
+
+      <Route
+        exact
+        path="/profile"
+        component={ Profile }
+      />
+
+      <Route
+        exact
+        path="/done-recipes"
+        component={ DoneRecipes }
+      />
+
+      <Route
+        exact
+        path="/favorite-recipes"
+        component={ DoneRecipes }
+      />
+    </Switch>
   );
 }
 

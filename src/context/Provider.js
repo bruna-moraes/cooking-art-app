@@ -6,7 +6,6 @@ function Provider({ children }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitDisable, setSubmitDisable] = useState(true);
-  console.log(setSubmitDisable);
 
   useEffect(() => {
     const handleValidate = () => {
