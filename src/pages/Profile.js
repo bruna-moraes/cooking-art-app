@@ -4,8 +4,7 @@ import Header from '../components/Header';
 function Profile() {
   return (
     <div>
-      <Header />
-      <h1>Hello Profile</h1>
+      <Header title="Profile" notSearchIcon />
       <Footer />
     </div>
   );
