@@ -43,6 +43,12 @@ function Provider({ children }) {
     setFetchedItems(data);
   }, [searchBarParameter, searchBarValue]);
 
+  const firstLoadFetch = useCallback(async (title) => {
+    const data = await fetchApi('nome', '', title);
+    const numberOfRecipes = 12;
+    setFetchedItems(data.slice(0, numberOfRecipes));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
 
@@ -63,6 +69,7 @@ function Provider({ children }) {
     history,
     handleClickFetch,
     fetchedItems,
+    firstLoadFetch,
   }), [
     email,
     password,
@@ -75,6 +82,7 @@ function Provider({ children }) {
     handleClickFetch,
     handleSubmit,
     history,
+    firstLoadFetch,
   ]);
 
   return (
