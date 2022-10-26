@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '../components/Header';
 import renderWithRouter from '../helpers/renderWithRouter';
@@ -7,8 +7,6 @@ import Provider from '../context/Provider';
 const ICONPROFILEBTN = 'profile-top-btn';
 const TITLEPAGE = 'page-title';
 const ROUTEPROFILE = '/profile';
-const SEARCHICONBTN = 'search-btn';
-const INPUTSEARCH = 'search-input';
 
 describe('Componente Header', () => {
   test('Testa se no "Header" estão sendo renderizados um "titulo" e um "icon de perfil"', () => {
@@ -37,14 +35,16 @@ describe('Componente Header', () => {
 
   test('Testa se ao clicar na "lupa" o input de pesquisa aparece e se clicar novamente, desaparece', () => {
     renderWithRouter(<Provider><Header /></Provider>);
-    const btnSearch = screen.getByAltText(SEARCHICONBTN);
-    const input = screen.getByTestId(INPUTSEARCH);
+    const btnSearch = screen.getByTestId('search-btn');
+    fireEvent.click(btnSearch);
 
-    userEvent.click(btnSearch);
+    const input = screen.getByTestId('search-input');
+    const radioIngrediente = screen.getByTestId('ingredient-search-radio');
     expect(input).toBeInTheDocument();
-    userEvent.type(input, 'cuzcuz');
+    expect(radioIngrediente).toBeInTheDocument();
 
     userEvent.click(btnSearch);
     expect(input).not.toBeInTheDocument();
+    expect(radioIngrediente).not.toBeInTheDocument();
   });
 });
