@@ -36,7 +36,7 @@ function Header({ title, notSearchIcon }) {
           />
         </button>
       )}
-      <SearchBar />
+      <SearchBar title={ title } />
     </div>
   );
 }

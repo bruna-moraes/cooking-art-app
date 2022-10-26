@@ -2,11 +2,15 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
+import fetchApi from '../services/fetchApi';
 
 function Provider({ children }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitDisable, setSubmitDisable] = useState(true);
+  const [searchBarValue, setSearchBarValue] = useState('');
+  const [searchBarParameter, setSearchBarParameter] = useState('ingrediente');
+  const [fetchedItems, setFetchedItems] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -30,6 +34,15 @@ function Provider({ children }) {
     setPassword(value);
   }, []);
 
+  const handleSearchValue = ({ target: { value } }) => setSearchBarValue(value);
+
+  const handleSearchParameter = ({ target: { value } }) => setSearchBarParameter(value);
+
+  const handleClickFetch = useCallback(async (title) => {
+    const data = await fetchApi(searchBarParameter, searchBarValue, title);
+    setFetchedItems(data);
+  }, [searchBarParameter, searchBarValue]);
+
   const handleSubmit = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
 
@@ -42,22 +55,31 @@ function Provider({ children }) {
     handleChangeEmail,
     handleChangePassword,
     submitDisable,
+    searchBarValue,
+    searchBarParameter,
+    handleSearchValue,
+    handleSearchParameter,
     handleSubmit,
     history,
-
+    handleClickFetch,
+    fetchedItems,
   }), [
     email,
     password,
     handleChangeEmail,
     handleChangePassword,
     submitDisable,
+    searchBarValue,
+    searchBarParameter,
+    fetchedItems,
+    handleClickFetch,
     handleSubmit,
     history,
   ]);
 
   return (
     <MyContext.Provider value={ context }>
-      {children}
+      { children }
     </MyContext.Provider>
 
   );
