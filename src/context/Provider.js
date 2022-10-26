@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
-import fetchFoodSearch from '../services/fetchFoodSearch';
+import fetchApi from '../services/fetchApi';
 
 function Provider({ children }) {
   const [email, setEmail] = useState('');
@@ -9,7 +10,8 @@ function Provider({ children }) {
   const [submitDisable, setSubmitDisable] = useState(true);
   const [searchBarValue, setSearchBarValue] = useState('');
   const [searchBarParameter, setSearchBarParameter] = useState('ingrediente');
-  const [fetchFoodResults, setFetchFoodResults] = useState([]);
+  const [fetchedItems, setFetchedItems] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     const handleValidate = () => {
@@ -36,13 +38,16 @@ function Provider({ children }) {
 
   const handleSearchParameter = ({ target: { value } }) => setSearchBarParameter(value);
 
-  const handleSearchClick = useCallback(async () => {
-    if (searchBarParameter === 'fist-letter' && searchBarValue.length > 1) {
-      global.alert('Your search must have only 1 (one) character');
-    }
-    const data = await fetchFoodSearch(searchBarParameter, searchBarValue);
-    setFetchFoodResults(data);
+  const handleClickFetch = useCallback(async (title) => {
+    const data = await fetchApi(searchBarParameter, searchBarValue, title);
+    setFetchedItems(data);
   }, [searchBarParameter, searchBarValue]);
+
+  const handleSubmit = useCallback(() => {
+    localStorage.setItem('user', JSON.stringify({ email }));
+
+    history.push('/meals');
+  }, [email, history]);
 
   const context = useMemo(() => ({
     email,
@@ -54,8 +59,10 @@ function Provider({ children }) {
     searchBarParameter,
     handleSearchValue,
     handleSearchParameter,
-    fetchFoodResults,
-    handleSearchClick,
+    handleSubmit,
+    history,
+    handleClickFetch,
+    fetchedItems,
   }), [
     email,
     password,
@@ -64,8 +71,10 @@ function Provider({ children }) {
     submitDisable,
     searchBarValue,
     searchBarParameter,
-    fetchFoodResults,
-    handleSearchClick,
+    fetchedItems,
+    handleClickFetch,
+    handleSubmit,
+    history,
   ]);
 
   return (
@@ -80,4 +89,7 @@ export default Provider;
 
 Provider.propTypes = {
   children: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 }.isRequired;

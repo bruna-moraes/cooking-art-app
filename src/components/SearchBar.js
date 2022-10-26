@@ -1,11 +1,12 @@
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
 import MyContext from '../context/MyContext';
 
-function SearchBar() {
+function SearchBar({ title }) {
   const {
     handleSearchValue,
     handleSearchParameter,
-    handleSearchClick,
+    handleClickFetch,
   } = useContext(MyContext);
 
   return (
@@ -58,12 +59,16 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ handleSearchClick }
+        onClick={ () => handleClickFetch(title) }
       >
         Pesquisar
       </button>
     </section>
   );
 }
+
+SearchBar.propTypes = {
+  title: PropTypes.string.isRequired,
+};
 
 export default SearchBar;
