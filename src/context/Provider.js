@@ -40,7 +40,8 @@ function Provider({ children }) {
 
   const handleClickFetch = useCallback(async (title) => {
     const data = await fetchApi(searchBarParameter, searchBarValue, title);
-    setFetchedItems(data);
+    const numberOfRecipes = 12;
+    setFetchedItems(data.slice(0, numberOfRecipes));
   }, [searchBarParameter, searchBarValue]);
 
   const firstLoadFetch = useCallback(async (title) => {
