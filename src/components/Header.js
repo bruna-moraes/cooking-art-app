@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { useContext } from 'react';
 import SearchBar from './SearchBar';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import MyContext from '../context/MyContext';
 
 function Header({ title, notSearchIcon }) {
+  const { handleVisivelInput, inputVisivel } = useContext(MyContext);
+
   const history = useHistory();
+
   const profileRoute = () => (
     history.push('/profile')
   );
@@ -28,6 +33,7 @@ function Header({ title, notSearchIcon }) {
         <button
           type="button"
           data-testid="search-btn"
+          onClick={ handleVisivelInput }
         >
           <img
             data-testid="search-top-btn"
@@ -36,7 +42,9 @@ function Header({ title, notSearchIcon }) {
           />
         </button>
       )}
-      <SearchBar title={ title } />
+      {inputVisivel && (
+        <SearchBar title={ title } />
+      )}
     </div>
   );
 }

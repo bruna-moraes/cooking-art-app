@@ -11,6 +11,7 @@ function Provider({ children }) {
   const [searchBarValue, setSearchBarValue] = useState('');
   const [searchBarParameter, setSearchBarParameter] = useState('ingrediente');
   const [fetchedItems, setFetchedItems] = useState([]);
+  const [inputVisivel, setInputVisivel] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -49,6 +50,10 @@ function Provider({ children }) {
     history.push('/meals');
   }, [email, history]);
 
+  const handleVisivelInput = useCallback(() => {
+    setInputVisivel(!inputVisivel);
+  }, [inputVisivel]);
+
   const context = useMemo(() => ({
     email,
     password,
@@ -63,6 +68,9 @@ function Provider({ children }) {
     history,
     handleClickFetch,
     fetchedItems,
+    handleVisivelInput,
+    setInputVisivel,
+    inputVisivel,
   }), [
     email,
     password,
@@ -75,6 +83,10 @@ function Provider({ children }) {
     handleClickFetch,
     handleSubmit,
     history,
+    handleVisivelInput,
+    inputVisivel,
+    setInputVisivel,
+
   ]);
 
   return (
