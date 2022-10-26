@@ -4,8 +4,7 @@ import Footer from './Footer';
 function Meals() {
   return (
     <div>
-      <Header />
-      <h1>Hello Meals</h1>
+      <Header title="Meals" />
       <Footer />
     </div>
   );
