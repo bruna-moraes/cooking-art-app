@@ -22,7 +22,6 @@ function SearchBar({ title }) {
 
   const handleClickFetch = useCallback(async () => {
     const data = await fetchApi(searchBarParameter, searchBarValue, title);
-
     setFetchedItems(data);
     setRedirect(true);
   }, [searchBarValue, searchBarParameter, title, setFetchedItems, setRedirect]);
