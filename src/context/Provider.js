@@ -41,7 +41,16 @@ function Provider({ children }) {
   const handleClickFetch = useCallback(async (title) => {
     const data = await fetchApi(searchBarParameter, searchBarValue, title);
     setFetchedItems(data);
-  }, [searchBarParameter, searchBarValue]);
+
+    if (data.length === 1 && title === 'Meals') {
+      const { idMeal } = data[0];
+      history.push(`/meals/${idMeal}`);
+    }
+    if (data.length === 1 && title === 'Drinks') {
+      const { idDrink } = data[0];
+      history.push(`/drinks/${idDrink}`);
+    }
+  }, [searchBarParameter, searchBarValue, history]);
 
   const handleSubmit = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
