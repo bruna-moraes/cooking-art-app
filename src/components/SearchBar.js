@@ -1,13 +1,41 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import MyContext from '../context/MyContext';
+import fetchApi from '../services/fetchApi';
 
 function SearchBar({ title }) {
   const {
-    handleSearchValue,
-    handleSearchParameter,
-    handleClickFetch,
+    setSearchBarValue,
+    setSearchBarParameter,
+    searchBarParameter,
+    searchBarValue,
+    setFetchedItems,
+    redirect,
+    setRedirect,
+    fetchedItems,
   } = useContext(MyContext);
+
+  const handleSearchValue = ({ target: { value } }) => setSearchBarValue(value);
+
+  const handleSearchParameter = ({ target: { value } }) => setSearchBarParameter(value);
+
+  const handleClickFetch = useCallback(async () => {
+    const data = await fetchApi(searchBarParameter, searchBarValue, title);
+
+    setFetchedItems(data);
+    setRedirect(true);
+  }, [searchBarValue, searchBarParameter, title, setFetchedItems, setRedirect]);
+
+  if (redirect && fetchedItems.length === 1 && title === 'Meals') {
+    const { idMeal } = fetchedItems[0];
+    return <Redirect to={ `/meals/${idMeal}` } />;
+  }
+
+  if (redirect && fetchedItems.length === 1 && title === 'Drinks') {
+    const { idDrink } = fetchedItems[0];
+    return <Redirect to={ `/drinks/${idDrink}` } />;
+  }
 
   return (
     <section>
