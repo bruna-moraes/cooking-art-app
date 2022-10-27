@@ -10,7 +10,7 @@ const ROUTEPROFILE = '/profile';
 
 describe('Componente Header', () => {
   test('Testa se no "Header" estão sendo renderizados um "titulo" e um "icon de perfil"', () => {
-    renderWithRouter(<Provider><Header /></Provider>);
+    renderWithRouter(<Provider><Header title="Meals" /></Provider>);
 
     const IconProfilebtn = screen.getByTestId(ICONPROFILEBTN);
     const titlePage = screen.getByTestId(TITLEPAGE);
@@ -20,7 +20,7 @@ describe('Componente Header', () => {
   });
 
   it('Testa se o botão "profile" quando clicado, redireciona pra rota "/profile"', () => {
-    const { history } = renderWithRouter(<Provider><Header /></Provider>);
+    const { history } = renderWithRouter(<Provider><Header title="Meals" /></Provider>);
 
     const btnIconProfile = screen.getByTestId(ICONPROFILEBTN);
 

@@ -8,7 +8,7 @@ import chickenMeals from '../../cypress/mocks/chickenMeals';
 
 describe('Componente SearchBar', () => {
   it('Verifica se o componente é renderizado com os inputs esperados', () => {
-    renderWithRouter(<Provider><SearchBar /></Provider>);
+    renderWithRouter(<Provider><SearchBar title="Meals" /></Provider>);
 
     const textInput = screen.getByTestId('search-input');
     expect(textInput).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('Componente SearchBar', () => {
       json: () => Promise.resolve(chickenMeals),
     }));
 
-    renderWithRouter(<Provider><SearchBar /></Provider>);
+    renderWithRouter(<Provider><SearchBar title="Meals" /></Provider>);
 
     const textInput = screen.getByTestId('search-input');
     const ingredientRadio = screen.getByRole('radio', { name: /ingrediente/i });
