@@ -13,6 +13,7 @@ function Provider({ children }) {
   const [inputVisivel, setInputVisivel] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [detailedRecipe, setDetailedRecipe] = useState([]);
+  const [recomendations, setRecomendations] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -67,6 +68,8 @@ function Provider({ children }) {
     setRedirect,
     detailedRecipe,
     setDetailedRecipe,
+    recomendations,
+    setRecomendations,
   }), [
     email,
     password,
@@ -84,6 +87,7 @@ function Provider({ children }) {
     redirect,
     detailedRecipe,
     setDetailedRecipe,
+    recomendations,
   ]);
 
   return (
