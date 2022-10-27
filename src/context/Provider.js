@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
 import fetchApi from '../services/fetchApi';
+import fetchCategories from '../services/fetchCategories';
+import fetchRecipesByCategory from '../services/fetchRecipesByCategory';
 
 function Provider({ children }) {
   const [email, setEmail] = useState('');
@@ -11,6 +13,9 @@ function Provider({ children }) {
   const [searchBarValue, setSearchBarValue] = useState('');
   const [searchBarParameter, setSearchBarParameter] = useState('ingrediente');
   const [fetchedItems, setFetchedItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   const history = useHistory();
 
   useEffect(() => {
@@ -50,6 +55,27 @@ function Provider({ children }) {
     setFetchedItems(data.slice(0, numberOfRecipes));
   }, []);
 
+  const loadCategories = useCallback(async (recipesType) => {
+    const fetchedCategories = await fetchCategories(recipesType);
+
+    setCategories(fetchedCategories);
+  }, []);
+
+  const filterRecipesByCategory = useCallback(async (recipesType, category) => {
+    if (selectedCategory === category || category === 'All') {
+      await firstLoadFetch(recipesType);
+
+      setSelectedCategory('All');
+
+      return;
+    }
+
+    const filteredRecipesByCategory = await fetchRecipesByCategory(recipesType, category);
+
+    setFetchedItems(filteredRecipesByCategory);
+    setSelectedCategory(category);
+  }, [firstLoadFetch, selectedCategory]);
+
   const handleSubmit = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
 
@@ -71,6 +97,9 @@ function Provider({ children }) {
     handleClickFetch,
     fetchedItems,
     firstLoadFetch,
+    categories,
+    loadCategories,
+    filterRecipesByCategory,
   }), [
     email,
     password,
@@ -84,6 +113,9 @@ function Provider({ children }) {
     handleSubmit,
     history,
     firstLoadFetch,
+    categories,
+    loadCategories,
+    filterRecipesByCategory,
   ]);
 
   return (
