@@ -22,8 +22,12 @@ function SearchBar({ title }) {
 
   const handleClickFetch = useCallback(async () => {
     const data = await fetchApi(searchBarParameter, searchBarValue, title);
+    if (data === null) {
+      return global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
 
-    setFetchedItems(data);
+    const numberOfRecipes = 12;
+    setFetchedItems(data.slice(0, numberOfRecipes));
     setRedirect(true);
   }, [searchBarValue, searchBarParameter, title, setFetchedItems, setRedirect]);
 
