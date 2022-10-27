@@ -37,9 +37,9 @@ describe('Componente SearchBar', () => {
   });
 
   it('Testa se fetch é chamado ao clicar no botão de pesquisa', () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(chickenMeals),
-    }));
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(chickenMeals),
+    });
 
     const { history } = renderWithRouter(<Provider><App /></Provider>);
     act(() => history.push('/meals'));

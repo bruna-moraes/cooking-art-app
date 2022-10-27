@@ -7,6 +7,7 @@ import Provider from '../context/Provider';
 const ICONPROFILEBTN = 'profile-top-btn';
 const TITLEPAGE = 'page-title';
 const ROUTEPROFILE = '/profile';
+const SEARCHICONBTN = 'search-top-btn';
 
 describe('Componente Header', () => {
   test('Testa se no "Header" estão sendo renderizados um "titulo" e um "icon de perfil"', () => {
