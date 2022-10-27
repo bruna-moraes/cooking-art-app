@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '../components/Header';
 import renderWithRouter from '../helpers/renderWithRouter';
@@ -14,9 +14,11 @@ describe('Componente Header', () => {
 
     const IconProfilebtn = screen.getByTestId(ICONPROFILEBTN);
     const titlePage = screen.getByTestId(TITLEPAGE);
+    const iconsearch = screen.getByTestId(SEARCHICONBTN);
 
     expect(IconProfilebtn).toBeInTheDocument();
     expect(titlePage).toBeInTheDocument();
+    expect(iconsearch).toBeInTheDocument();
   });
 
   it('Testa se o botão "profile" quando clicado, redireciona pra rota "/profile"', () => {
@@ -29,5 +31,20 @@ describe('Componente Header', () => {
     const { pathname } = history.location;
 
     expect(pathname).toBe(ROUTEPROFILE);
+  });
+
+  test('Testa se ao clicar na "lupa" o input de pesquisa aparece e se clicar novamente, desaparece', () => {
+    renderWithRouter(<Provider><Header /></Provider>);
+    const btnSearch = screen.getByTestId('search-btn');
+    fireEvent.click(btnSearch);
+
+    const input = screen.getByTestId('search-input');
+    const radioIngrediente = screen.getByTestId('ingredient-search-radio');
+    expect(input).toBeInTheDocument();
+    expect(radioIngrediente).toBeInTheDocument();
+
+    userEvent.click(btnSearch);
+    expect(input).not.toBeInTheDocument();
+    expect(radioIngrediente).not.toBeInTheDocument();
   });
 });
