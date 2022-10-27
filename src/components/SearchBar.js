@@ -1,13 +1,45 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import MyContext from '../context/MyContext';
+import fetchApi from '../services/fetchApi';
 
 function SearchBar({ title }) {
   const {
-    handleSearchValue,
-    handleSearchParameter,
-    handleClickFetch,
+    setSearchBarValue,
+    setSearchBarParameter,
+    searchBarParameter,
+    searchBarValue,
+    setFetchedItems,
+    redirect,
+    setRedirect,
+    fetchedItems,
   } = useContext(MyContext);
+
+  const handleSearchValue = ({ target: { value } }) => setSearchBarValue(value);
+
+  const handleSearchParameter = ({ target: { value } }) => setSearchBarParameter(value);
+
+  const handleClickFetch = useCallback(async () => {
+    const data = await fetchApi(searchBarParameter, searchBarValue, title);
+    if (data === null) {
+      return global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
+
+    const numberOfRecipes = 12;
+    setFetchedItems(data.slice(0, numberOfRecipes));
+    setRedirect(true);
+  }, [searchBarValue, searchBarParameter, title, setFetchedItems, setRedirect]);
+
+  if (redirect && fetchedItems.length === 1 && title === 'Meals') {
+    const { idMeal } = fetchedItems[0];
+    return <Redirect to={ `/meals/${idMeal}` } />;
+  }
+
+  if (redirect && fetchedItems.length === 1 && title === 'Drinks') {
+    const { idDrink } = fetchedItems[0];
+    return <Redirect to={ `/drinks/${idDrink}` } />;
+  }
 
   return (
     <section>
@@ -23,7 +55,6 @@ function SearchBar({ title }) {
       </label>
       <div>
         <label htmlFor="ingredient-search-radio">
-          Ingrediente
           <input
             type="radio"
             data-testid="ingredient-search-radio"
@@ -32,9 +63,9 @@ function SearchBar({ title }) {
             value="ingrediente"
             onChange={ handleSearchParameter }
           />
+          Ingrediente
         </label>
         <label htmlFor="name-search-radio">
-          Nome
           <input
             type="radio"
             data-testid="name-search-radio"
@@ -43,9 +74,9 @@ function SearchBar({ title }) {
             value="nome"
             onChange={ handleSearchParameter }
           />
+          Nome
         </label>
         <label htmlFor="first-letter-search-radio">
-          Primeira letra
           <input
             type="radio"
             data-testid="first-letter-search-radio"
@@ -54,6 +85,7 @@ function SearchBar({ title }) {
             value="primeira-letra"
             onChange={ handleSearchParameter }
           />
+          Primeira letra
         </label>
       </div>
       <button

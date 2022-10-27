@@ -15,7 +15,9 @@ function Provider({ children }) {
   const [fetchedItems, setFetchedItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const [inputVisivel, setInputVisivel] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  const [detailedRecipe, setDetailedRecipe] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -38,16 +40,6 @@ function Provider({ children }) {
     const { value } = target;
     setPassword(value);
   }, []);
-
-  const handleSearchValue = ({ target: { value } }) => setSearchBarValue(value);
-
-  const handleSearchParameter = ({ target: { value } }) => setSearchBarParameter(value);
-
-  const handleClickFetch = useCallback(async (title) => {
-    const data = await fetchApi(searchBarParameter, searchBarValue, title);
-    const numberOfRecipes = 12;
-    setFetchedItems(data.slice(0, numberOfRecipes));
-  }, [searchBarParameter, searchBarValue]);
 
   const firstLoadFetch = useCallback(async (title) => {
     const data = await fetchApi('nome', '', title);
@@ -82,24 +74,35 @@ function Provider({ children }) {
     history.push('/meals');
   }, [email, history]);
 
+  const handleVisivelInput = useCallback(() => {
+    setInputVisivel(!inputVisivel);
+  }, [inputVisivel]);
+
   const context = useMemo(() => ({
     email,
     password,
     handleChangeEmail,
     handleChangePassword,
     submitDisable,
+    setSearchBarValue,
     searchBarValue,
+    setSearchBarParameter,
     searchBarParameter,
-    handleSearchValue,
-    handleSearchParameter,
+    setFetchedItems,
     handleSubmit,
     history,
-    handleClickFetch,
     fetchedItems,
     firstLoadFetch,
     categories,
     loadCategories,
     filterRecipesByCategory,
+    handleVisivelInput,
+    setInputVisivel,
+    inputVisivel,
+    redirect,
+    setRedirect,
+    detailedRecipe,
+    setDetailedRecipe,
   }), [
     email,
     password,
@@ -109,13 +112,18 @@ function Provider({ children }) {
     searchBarValue,
     searchBarParameter,
     fetchedItems,
-    handleClickFetch,
     handleSubmit,
     history,
     firstLoadFetch,
     categories,
     loadCategories,
     filterRecipesByCategory,
+    handleVisivelInput,
+    inputVisivel,
+    setInputVisivel,
+    redirect,
+    detailedRecipe,
+    setDetailedRecipe,
   ]);
 
   return (
