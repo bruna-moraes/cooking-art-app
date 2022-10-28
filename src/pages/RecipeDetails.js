@@ -4,8 +4,9 @@ import Meals from '../components/Meals';
 import Drinks from '../components/Drinks';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
+import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
-import Recomendation from '../components/Recomendatios';
+import Recomendations from '../components/Recomendations';
 
 function RecipesDetails({
   history: { location: { pathname } },
@@ -44,7 +45,8 @@ function RecipesDetails({
           ? <Meals />
           : <Drinks />
       }
-      <Recomendation />
+      <DetailedRecipeCard />
+      <Recomendations />
       <button
         type="button"
         data-testid="start-recipe-btn"

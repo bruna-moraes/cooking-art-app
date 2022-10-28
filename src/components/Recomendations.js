@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import MyContext from '../context/MyContext';
 import 'bootstrap/dist/css/bootstrap.css';
 
-export default function Recomendation() {
+export default function Recomendations() {
   const { recomendations } = useContext(MyContext);
   const SIX = 6;
 

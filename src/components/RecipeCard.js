@@ -16,7 +16,6 @@ function RecipeCard({ recipe, index }) {
     </div>
   );
 }
-
 RecipeCard.propTypes = {
   recipe: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -24,5 +23,4 @@ RecipeCard.propTypes = {
   }).isRequired,
   index: PropTypes.number.isRequired,
 };
-
 export default RecipeCard;
