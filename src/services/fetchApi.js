@@ -31,7 +31,7 @@ const fetchApi = async (param, value, title) => {
       return drinks;
     }
   } catch (err) {
-    return err;
+    return [];
   }
 };
 
