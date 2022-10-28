@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import MyContext from '../context/MyContext';
 
-export default function RecipeCard() {
+export default function DetailedRecipeCard() {
   const { detailedRecipe } = useContext(MyContext);
 
   const getRecipeIngredients = () => {

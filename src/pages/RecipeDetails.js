@@ -4,7 +4,7 @@ import Meals from '../components/Meals';
 import Drinks from '../components/Drinks';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
-import RecipeCard from '../components/RecipeCard';
+import DetailedRecipeCard from '../components/DetailedRecipeCard';
 
 function RecipesDetails({
   history: { location: { pathname } },
@@ -37,7 +37,7 @@ function RecipesDetails({
           ? <Meals />
           : <Drinks />
       }
-      <RecipeCard />
+      <DetailedRecipeCard />
     </div>
   );
 }
