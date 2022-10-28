@@ -10,8 +10,11 @@ function RecipeDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe,
-    setRecomendations } = useContext(MyContext);
+  const {
+    setDetailedRecipe,
+    setRecomendations,
+    inProgressRecipe,
+    setInProgressRecipe } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -39,10 +42,32 @@ function RecipeDetails({
     return result;
   };
 
+  const inProgressCheck = useCallback(() => {
+    let type;
+
+    if (pathname.includes('meals')) {
+      type = 'meals';
+    }
+
+    if (pathname.includes('drinks')) {
+      type = 'drinks';
+    }
+
+    const inProgressRecipes = localStorage.getItem('inProgressRecipes')
+      ? JSON.parse(localStorage.getItem('inProgressRecipes'))
+      : { drinks: {}, meals: {} };
+
+    const check = (
+      Object.keys(inProgressRecipes[type]).some((recipeId) => recipeId === id));
+
+    if (check === true) setInProgressRecipe(true);
+  }, [id, pathname, setInProgressRecipe]);
+
   useEffect(() => {
     getItem();
     getRecomendations();
-  }, [getItem, getRecomendations]);
+    inProgressCheck();
+  }, [getItem, getRecomendations, inProgressCheck]);
 
   return (
     <div>
@@ -54,7 +79,7 @@ function RecipeDetails({
         className="start-recipe-btn"
         disabled={ handleDisableBtn }
       >
-        Iniciar Receita
+        { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
       </button>
     </div>
   );

@@ -19,6 +19,7 @@ function Provider({ children }) {
   const [redirect, setRedirect] = useState(false);
   const [detailedRecipe, setDetailedRecipe] = useState([]);
   const [recomendations, setRecomendations] = useState([]);
+  const [inProgressRecipe, setInProgressRecipe] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -106,6 +107,8 @@ function Provider({ children }) {
     setDetailedRecipe,
     recomendations,
     setRecomendations,
+    inProgressRecipe,
+    setInProgressRecipe,
   }), [
     email,
     password,
@@ -128,6 +131,7 @@ function Provider({ children }) {
     detailedRecipe,
     setDetailedRecipe,
     recomendations,
+    inProgressRecipe,
   ]);
 
   return (
