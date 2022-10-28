@@ -4,13 +4,13 @@ import Meals from '../components/Meals';
 import Drinks from '../components/Drinks';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
+import RecipeCard from '../components/RecipeCard';
 
 function RecipesDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe, detailedRecipe } = useContext(MyContext);
-  console.log(detailedRecipe);
+  const { setDetailedRecipe } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -30,10 +30,6 @@ function RecipesDetails({
     getItem();
   }, [getItem]);
 
-  // const ingredients = Object
-  //   .keys(detailedRecipe).filter((e) => e.includes('strIngredient'));
-  // console.log(ingredients);
-
   return (
     <div>
       {
@@ -41,47 +37,7 @@ function RecipesDetails({
           ? <Meals />
           : <Drinks />
       }
-      {
-        detailedRecipe.map((e, index) => (
-          <div key={ index }>
-
-            <img
-              data-testid="recipe-photo"
-              src={ e.strMealThumb || e.strDrinkThumb }
-              alt={ e.idDrink || e.idMeal }
-            />
-            <h3
-              data-testid="recipe-title"
-            >
-              { e.strMeal }
-            </h3>
-            <p data-testid="recipe-category">{ e.strCategory}</p>
-            <ul>
-              {
-                ingredients.map((el, indexIngredient) => (
-
-                  <li
-                    key={ indexIngredient }
-                    data-testid={ `${index}-ingredient-name-and-measure` }
-                  >
-                    { `${Object.keys(el)[0]} - ${Object.values(el)[0]}` }
-
-                  </li>
-                ))
-              }
-
-            </ul>
-            <p data-testid="instructions">{ e.strInstructions}</p>
-            <iframe
-              data-testid="video"
-              width="853"
-              height="480"
-              title="Embedded youtube"
-              src={ e.strYoutube }
-            />
-          </div>
-        ))
-      }
+      <RecipeCard />
     </div>
   );
 }
