@@ -74,7 +74,7 @@ footer {
 }
 
 .start-recipe-btn {
-  position: fixed;
   bottom: 0;
+  position: fixed;
   margin-left: 160px;
 }
