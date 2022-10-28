@@ -9,7 +9,6 @@ export default function RecipeCard() {
       ([key, value]) => (key.includes('strIngredient') || key.includes('strMeasure'))
         && value !== '' && value,
     );
-    console.log(ingredients);
 
     const ingredientName = ingredients.reduce((acc, [key, value]) => {
       if (key.includes('strIngredient')) {
@@ -17,7 +16,6 @@ export default function RecipeCard() {
       }
       return acc;
     }, {});
-    console.log(ingredientName);
 
     const ingredientsQuantity = ingredients.reduce((acc, [key, value]) => {
       if (key.includes('strMeasure')) {
@@ -25,7 +23,6 @@ export default function RecipeCard() {
       }
       return acc;
     }, {});
-    console.log(ingredientsQuantity);
 
     return Object.values(ingredientName)
       .map((ingredient, i) => `${ingredient} ${Object.values(ingredientsQuantity)[i]}`);
@@ -47,7 +44,11 @@ export default function RecipeCard() {
             >
               { e.strMeal || e.strDrink }
             </h3>
-            <p data-testid="recipe-category">{ e.strCategory }</p>
+            <p data-testid="recipe-category">
+              {
+                detailedRecipe[0].idMeal ? e.strCategory : e.strAlcoholic
+              }
+            </p>
             <ol>
               {
                 getRecipeIngredients().map((value, i) => (
@@ -60,13 +61,15 @@ export default function RecipeCard() {
               }
             </ol>
             <p data-testid="instructions">{ e.strInstructions }</p>
-            <iframe
-              data-testid="video"
-              width="400"
-              height="250"
-              title="Embedded youtube"
-              src={ e.strYoutube.replace('watch?v=', 'embed/') }
-            />
+            {
+              detailedRecipe[0].idMeal ? <iframe
+                data-testid="video"
+                width="400"
+                height="250"
+                title="Embedded youtube"
+                src={ e.strYoutube.replace('watch?v=', 'embed/') }
+              /> : null
+            }
           </div>
         ))
       }
