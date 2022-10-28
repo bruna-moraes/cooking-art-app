@@ -5,12 +5,14 @@ import Drinks from '../components/Drinks';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import RecipeCard from '../components/RecipeCard';
+import fetchRecomendations from '../services/fetchRecomendations';
+import Recomendation from '../components/Recomendatios';
 
 function RecipesDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe } = useContext(MyContext);
+  const { setDetailedRecipe, setRecomendations } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -26,9 +28,15 @@ function RecipesDetails({
     setDetailedRecipe(data);
   }, [id, setDetailedRecipe, getPath]);
 
+  const getRecomendations = useCallback(async () => {
+    const data = await fetchRecomendations(pathname);
+    setRecomendations(data);
+  }, [setRecomendations, pathname]);
+
   useEffect(() => {
     getItem();
-  }, [getItem]);
+    getRecomendations();
+  }, [getItem, getRecomendations]);
 
   return (
     <div>
@@ -38,6 +46,14 @@ function RecipesDetails({
           : <Drinks />
       }
       <RecipeCard />
+      <Recomendation />
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        className="start-recipe-btn"
+      >
+        Iniciar Receita
+      </button>
     </div>
   );
 }
