@@ -1,10 +1,43 @@
 import PropTypes from 'prop-types';
-
+import { useCallback, useContext, useEffect } from 'react';
 import Meals from '../components/Meals';
 import Drinks from '../components/Drinks';
+import MyContext from '../context/MyContext';
+import fetchDetailsApi from '../services/fetchDetailsApi';
+import DetailedRecipeCard from '../components/DetailedRecipeCard';
+import fetchRecomendations from '../services/fetchRecomendations';
+import Recomendations from '../components/Recomendations';
 
-function RecipesDetails({ location: { pathname }, match: { params: { id } } }) {
-  console.log(id);
+function RecipesDetails({
+  history: { location: { pathname } },
+  match: { params: { id } },
+}) {
+  const { setDetailedRecipe, setRecomendations } = useContext(MyContext);
+
+  const getPath = useCallback(() => {
+    if (pathname.includes('meals')) {
+      return 'themealdb';
+    }
+    if (pathname.includes('drinks')) {
+      return 'thecocktaildb';
+    }
+  }, [pathname]);
+
+  const getItem = useCallback(async () => {
+    const data = await fetchDetailsApi(getPath(), id);
+    setDetailedRecipe(data);
+  }, [id, setDetailedRecipe, getPath]);
+
+  const getRecomendations = useCallback(async () => {
+    const data = await fetchRecomendations(pathname);
+    setRecomendations(data);
+  }, [setRecomendations, pathname]);
+
+  useEffect(() => {
+    getItem();
+    getRecomendations();
+  }, [getItem, getRecomendations]);
+
   return (
     <div>
       {
@@ -12,13 +45,24 @@ function RecipesDetails({ location: { pathname }, match: { params: { id } } }) {
           ? <Meals />
           : <Drinks />
       }
+      <DetailedRecipeCard />
+      <Recomendations />
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        className="start-recipe-btn"
+      >
+        Iniciar Receita
+      </button>
     </div>
   );
 }
 
 RecipesDetails.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
