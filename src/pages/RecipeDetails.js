@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
@@ -73,14 +74,16 @@ function RecipeDetails({
     <div>
       <DetailedRecipeCard />
       <Recomendations />
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="start-recipe-btn"
-        disabled={ handleDisableBtn }
-      >
-        { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
-      </button>
+      <Link to={ `${pathname}/in-progress` }>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="start-recipe-btn"
+          disabled={ handleDisableBtn }
+        >
+          { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
+        </button>
+      </Link>
     </div>
   );
 }
