@@ -1,13 +1,14 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
+
 import renderWithRouter from '../helpers/renderWithRouter';
-import App from '../App';
 import chickenMeals from '../../cypress/mocks/chickenMeals';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import oneDrink from '../../cypress/mocks/oneDrink';
 import Provider from '../context/Provider';
+import SearchBar from '../components/SearchBar';
 
 const searchTestId = 'search-input';
 const ingredientTestId = 'ingredient-search-radio';
@@ -17,8 +18,7 @@ const btnTestId = 'exec-search-btn';
 
 describe('Componente SearchBar', () => {
   it('Verifica se o componente é renderizado com os inputs esperados', () => {
-    const { history } = renderWithRouter(<Provider><App /></Provider>);
-    act(() => history.push('/meals'));
+    renderWithRouter(<Provider><SearchBar title="Meals" /></Provider>);
 
     const textInput = screen.getByTestId(searchTestId);
     expect(textInput).toBeInTheDocument();
@@ -41,8 +41,7 @@ describe('Componente SearchBar', () => {
       json: jest.fn().mockResolvedValue(chickenMeals),
     });
 
-    const { history } = renderWithRouter(<Provider><App /></Provider>);
-    act(() => history.push('/meals'));
+    renderWithRouter(<Provider><SearchBar title="Meals" /></Provider>);
 
     const textInput = screen.getByTestId(searchTestId);
     const ingredientRadio = screen.getByTestId(ingredientTestId);
@@ -62,8 +61,7 @@ describe('Componente SearchBar', () => {
       json: jest.fn().mockResolvedValue(oneMeal),
     });
 
-    const { history } = renderWithRouter(<Provider><App /></Provider>);
-    act(() => history.push('/meals'));
+    const { history } = renderWithRouter(<Provider><SearchBar title="Meals" /></Provider>);
 
     const textInput = screen.getByTestId(searchTestId);
     const nameRadio = screen.getByTestId(nameRadioTestId);
@@ -85,8 +83,7 @@ describe('Componente SearchBar', () => {
       json: jest.fn().mockResolvedValue(oneDrink),
     });
 
-    const { history } = renderWithRouter(<Provider><App /></Provider>);
-    act(() => history.push('/drinks'));
+    const { history } = renderWithRouter(<Provider><SearchBar title="Drinks" /></Provider>);
 
     const textInput = screen.getByTestId(searchTestId);
     const nameRadio = screen.getByTestId(nameRadioTestId);
