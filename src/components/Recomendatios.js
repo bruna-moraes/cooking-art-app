@@ -1,29 +1,32 @@
 import { useContext } from 'react';
+import Carousel from 'react-bootstrap/Carousel';
 import MyContext from '../context/MyContext';
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default function Recomendation() {
   const { recomendations } = useContext(MyContext);
+  const SIX = 6;
 
   return (
-    <div>
+    <Carousel>
       {
-        recomendations.map((recomendation, index) => (
-          <article
-            key={ index }
-            data-testid={ `${index}-recommendation-card` }
-          >
+        recomendations.slice(0, SIX).map((recomendation, index) => (
+          <Carousel.Item key={ index } data-testid={ `${index}-recommendation-card` }>
             <img
-              src={ recomendation.strDrinkThumb }
-              alt={ recomendation.strDrink }
+              src={ recomendation.strDrinkThumb || recomendation.strMealThumb }
+              alt={ recomendation.strDrink || recomendation.strMeal }
+              className="d-block w-100"
             />
-            <h3
-              data-testid={ `${index}-recommendation-title` }
-            >
-              { recomendation.strDrink }
-            </h3>
-          </article>
+            <Carousel.Caption>
+              <h3
+                data-testid={ `${index}-recommendation-title` }
+              >
+                { recomendation.strDrink || recomendation.strMeal }
+              </h3>
+            </Carousel.Caption>
+          </Carousel.Item>
         ))
       }
-    </div>
+    </Carousel>
   );
 }
