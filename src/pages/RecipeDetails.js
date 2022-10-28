@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
-import Meals from '../components/Meals';
-import Drinks from '../components/Drinks';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
 import Recomendations from '../components/Recomendations';
 
-function RecipesDetails({
+function RecipeDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe, setRecomendations } = useContext(MyContext);
+  const { setDetailedRecipe,
+    setRecomendations } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -33,6 +32,13 @@ function RecipesDetails({
     setRecomendations(data);
   }, [setRecomendations, pathname]);
 
+  const handleDisableBtn = () => {
+    const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    const result = recipes.some((recipe) => recipe.id === id);
+
+    return result;
+  };
+
   useEffect(() => {
     getItem();
     getRecomendations();
@@ -40,17 +46,13 @@ function RecipesDetails({
 
   return (
     <div>
-      {
-        pathname.includes('meals')
-          ? <Meals />
-          : <Drinks />
-      }
       <DetailedRecipeCard />
       <Recomendations />
       <button
         type="button"
         data-testid="start-recipe-btn"
         className="start-recipe-btn"
+        disabled={ handleDisableBtn }
       >
         Iniciar Receita
       </button>
@@ -58,7 +60,7 @@ function RecipesDetails({
   );
 }
 
-RecipesDetails.propTypes = {
+RecipeDetails.propTypes = {
   history: PropTypes.shape({
     location: PropTypes.shape({
       pathname: PropTypes.string,
@@ -71,4 +73,4 @@ RecipesDetails.propTypes = {
   }).isRequired,
 };
 
-export default RecipesDetails;
+export default RecipeDetails;
