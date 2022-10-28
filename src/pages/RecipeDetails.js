@@ -45,6 +45,13 @@ function RecipesDetails({
           : <Drinks />
       }
       <Recomendation />
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        className="start-recipe-btn"
+      >
+        Iniciar Receita
+      </button>
     </div>
   );
 }
