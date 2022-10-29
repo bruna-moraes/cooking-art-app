@@ -79,6 +79,13 @@ function RecipeDetails({
     setCopiedLink(true);
   };
 
+  const updateBtnCheck = (object, favoriteItem) => {
+    object.some((item) => item.id === favoriteItem.id);
+    const removeObj = object.filter((e) => e.id !== favoriteItem.id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(removeObj));
+    setFavoriteRecipe(false);
+  };
+
   const handleSetFavorite = () => {
     const favoriteRecipes = localStorage.getItem('favoriteRecipes');
 
@@ -93,12 +100,15 @@ function RecipeDetails({
         name: strMeal,
         image: strMealThumb,
       };
-      if (!favoriteRecipes) {
+      if (!favoriteRecipes || favoriteRecipes === []) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteMeal]));
+        setFavoriteRecipe(true);
       } else {
         const parsedObj = JSON.parse(favoriteRecipes);
         localStorage.setItem('favoriteRecipes', JSON
           .stringify([...parsedObj, favoriteMeal]));
+        setFavoriteRecipe(true);
+        updateBtnCheck(parsedObj, favoriteMeal);
       }
     }
 
@@ -116,10 +126,13 @@ function RecipeDetails({
       };
       if (!favoriteRecipes) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteDrink]));
+        setFavoriteRecipe(true);
       } else {
         const parsedObj = JSON.parse(favoriteRecipes);
         localStorage.setItem('favoriteRecipes', JSON
           .stringify([...parsedObj, favoriteDrink]));
+        setFavoriteRecipe(true);
+        updateBtnCheck(parsedObj, favoriteDrink);
       }
     }
   };
