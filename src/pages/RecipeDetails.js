@@ -7,6 +7,8 @@ import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
 import Recomendations from '../components/Recomendations';
 import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -21,7 +23,9 @@ function RecipeDetails({
     setInProgressRecipe,
     copiedLink,
     setCopiedLink,
-    detailedRecipe } = useContext(MyContext);
+    detailedRecipe,
+    favoriteRecipe,
+    setFavoriteRecipe } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -83,7 +87,7 @@ function RecipeDetails({
       const favoriteMeal = {
         id: idMeal,
         type: 'meal',
-        nationality: strArea,
+        nationality: strArea || '',
         category: strCategory,
         alcoholicOrNot: '',
         name: strMeal,
@@ -120,29 +124,39 @@ function RecipeDetails({
     }
   };
 
+  const favoriteCheck = useCallback(() => {
+    const favoriteRecipes = localStorage.getItem('favoriteRecipes')
+      ? JSON.parse(localStorage.getItem('favoriteRecipes'))
+      : [{ id: '' }];
+
+    const check = favoriteRecipes.some((recipe) => recipe.id === id);
+    setFavoriteRecipe(check);
+  }, [id, setFavoriteRecipe]);
+
   useEffect(() => {
     getItem();
     getRecomendations();
     inProgressCheck();
-  }, [getItem, getRecomendations, inProgressCheck]);
+    favoriteCheck();
+  }, [getItem, getRecomendations, inProgressCheck, favoriteCheck]);
 
   return (
     <div>
       <div>
-        <button
-          type="button"
+        <input
+          type="image"
           data-testid="share-btn"
           onClick={ clipboardCopy }
-        >
-          <img src={ shareIcon } alt="shareicon" />
-        </button>
-        <button
-          type="button"
+          src={ shareIcon }
+          alt="shareicon"
+        />
+        <input
+          type="image"
           data-testid="favorite-btn"
           onClick={ handleSetFavorite }
-        >
-          Favoritar
-        </button>
+          src={ favoriteRecipe ? blackHeartIcon : whiteHeartIcon }
+          alt="favorite-icon"
+        />
         {
           copiedLink ? <p>Link copied!</p> : null
         }
