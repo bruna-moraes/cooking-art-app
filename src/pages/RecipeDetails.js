@@ -6,6 +6,9 @@ import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
 import Recomendations from '../components/Recomendations';
+import shareIcon from '../images/shareIcon.svg';
+
+const copy = require('clipboard-copy');
 
 function RecipeDetails({
   history: { location: { pathname } },
@@ -15,7 +18,9 @@ function RecipeDetails({
     setDetailedRecipe,
     setRecomendations,
     inProgressRecipe,
-    setInProgressRecipe } = useContext(MyContext);
+    setInProgressRecipe,
+    copiedLink,
+    setCopiedLink } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -64,6 +69,11 @@ function RecipeDetails({
     if (check === true) setInProgressRecipe(true);
   }, [id, pathname, setInProgressRecipe]);
 
+  const clipboardCopy = () => {
+    copy(window.location.href);
+    setCopiedLink(true);
+  };
+
   useEffect(() => {
     getItem();
     getRecomendations();
@@ -72,6 +82,25 @@ function RecipeDetails({
 
   return (
     <div>
+      <div>
+        <button
+          type="button"
+          data-testid="share-btn"
+          onClick={ clipboardCopy }
+        >
+          <img src={ shareIcon } alt="shareicon" />
+          Compartilhar
+        </button>
+        <button
+          type="button"
+          data-testid="favorite-btn"
+        >
+          Favoritar
+        </button>
+        {
+          copiedLink ? <p>Link copied!</p> : null
+        }
+      </div>
       <DetailedRecipeCard />
       <Recomendations />
       <Link to={ `${pathname}/in-progress` }>
@@ -84,20 +113,6 @@ function RecipeDetails({
           { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
         </button>
       </Link>
-      <div>
-        <button
-          type="button"
-          data-testid="share-btn"
-        >
-          Compartilhar
-        </button>
-        <button
-          type="button"
-          data-testid="favorite-btn"
-        >
-          Favoritar
-        </button>
-      </div>
     </div>
   );
 }
