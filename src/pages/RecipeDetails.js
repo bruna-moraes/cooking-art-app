@@ -20,7 +20,8 @@ function RecipeDetails({
     inProgressRecipe,
     setInProgressRecipe,
     copiedLink,
-    setCopiedLink } = useContext(MyContext);
+    setCopiedLink,
+    detailedRecipe } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -74,6 +75,51 @@ function RecipeDetails({
     setCopiedLink(true);
   };
 
+  const handleSetFavorite = () => {
+    const favoriteRecipes = localStorage.getItem('favoriteRecipes');
+
+    if (pathname.includes('meals')) {
+      const { idMeal, strArea, strCategory, strMeal, strMealThumb } = detailedRecipe[0];
+      const favoriteMeal = {
+        id: idMeal,
+        type: 'meal',
+        nationality: strArea,
+        category: strCategory,
+        alcoholicOrNot: '',
+        name: strMeal,
+        image: strMealThumb,
+      };
+      if (!favoriteRecipes) {
+        localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteMeal]));
+      } else {
+        const parsedObj = JSON.parse(favoriteRecipes);
+        localStorage.setItem('favoriteRecipes', JSON
+          .stringify([...parsedObj, favoriteMeal]));
+      }
+    }
+
+    if (pathname.includes('drinks')) {
+      const { idDrink, strArea, strCategory,
+        strAlcoholic, strDrink, strDrinkThumb } = detailedRecipe[0];
+      const favoriteDrink = {
+        id: idDrink,
+        type: 'drink',
+        nationality: strArea || '',
+        category: strCategory || '',
+        alcoholicOrNot: strAlcoholic,
+        name: strDrink,
+        image: strDrinkThumb,
+      };
+      if (!favoriteRecipes) {
+        localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteDrink]));
+      } else {
+        const parsedObj = JSON.parse(favoriteRecipes);
+        localStorage.setItem('favoriteRecipes', JSON
+          .stringify([...parsedObj, favoriteDrink]));
+      }
+    }
+  };
+
   useEffect(() => {
     getItem();
     getRecomendations();
@@ -89,11 +135,11 @@ function RecipeDetails({
           onClick={ clipboardCopy }
         >
           <img src={ shareIcon } alt="shareicon" />
-          Compartilhar
         </button>
         <button
           type="button"
           data-testid="favorite-btn"
+          onClick={ handleSetFavorite }
         >
           Favoritar
         </button>
