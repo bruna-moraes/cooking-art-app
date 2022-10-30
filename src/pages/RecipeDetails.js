@@ -1,18 +1,26 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
-import Meals from '../components/Meals';
-import Drinks from '../components/Drinks';
+import { Link } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
 import Recomendations from '../components/Recomendations';
+import shareIcon from '../images/shareIcon.svg';
 
-function RecipesDetails({
+const copy = require('clipboard-copy');
+
+function RecipeDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe, setRecomendations } = useContext(MyContext);
+  const {
+    setDetailedRecipe,
+    setRecomendations,
+    inProgressRecipe,
+    setInProgressRecipe,
+    copiedLink,
+    setCopiedLink } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -33,32 +41,83 @@ function RecipesDetails({
     setRecomendations(data);
   }, [setRecomendations, pathname]);
 
+  const handleDisableBtn = () => {
+    const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    const result = recipes.some((recipe) => recipe.id === id);
+
+    return result;
+  };
+
+  const inProgressCheck = useCallback(() => {
+    let type;
+
+    if (pathname.includes('meals')) {
+      type = 'meals';
+    }
+
+    if (pathname.includes('drinks')) {
+      type = 'drinks';
+    }
+
+    const inProgressRecipes = localStorage.getItem('inProgressRecipes')
+      ? JSON.parse(localStorage.getItem('inProgressRecipes'))
+      : { drinks: {}, meals: {} };
+
+    const check = (
+      Object.keys(inProgressRecipes[type]).some((recipeId) => recipeId === id));
+
+    if (check === true) setInProgressRecipe(true);
+  }, [id, pathname, setInProgressRecipe]);
+
+  const clipboardCopy = () => {
+    copy(window.location.href);
+    setCopiedLink(true);
+  };
+
   useEffect(() => {
     getItem();
     getRecomendations();
-  }, [getItem, getRecomendations]);
+    inProgressCheck();
+  }, [getItem, getRecomendations, inProgressCheck]);
 
   return (
     <div>
-      {
-        pathname.includes('meals')
-          ? <Meals />
-          : <Drinks />
-      }
+      <div>
+        <button
+          type="button"
+          data-testid="share-btn"
+          onClick={ clipboardCopy }
+        >
+          <img src={ shareIcon } alt="shareicon" />
+          Compartilhar
+        </button>
+        <button
+          type="button"
+          data-testid="favorite-btn"
+        >
+          Favoritar
+        </button>
+        {
+          copiedLink ? <p>Link copied!</p> : null
+        }
+      </div>
       <DetailedRecipeCard />
       <Recomendations />
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="start-recipe-btn"
-      >
-        Iniciar Receita
-      </button>
+      <Link to={ `${pathname}/in-progress` }>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="start-recipe-btn"
+          disabled={ handleDisableBtn }
+        >
+          { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
+        </button>
+      </Link>
     </div>
   );
 }
 
-RecipesDetails.propTypes = {
+RecipeDetails.propTypes = {
   history: PropTypes.shape({
     location: PropTypes.shape({
       pathname: PropTypes.string,
@@ -71,4 +130,4 @@ RecipesDetails.propTypes = {
   }).isRequired,
 };
 
-export default RecipesDetails;
+export default RecipeDetails;
