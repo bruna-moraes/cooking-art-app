@@ -49,7 +49,6 @@ function RecipeDetails({
   const handleDisableBtn = () => {
     const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
     const result = recipes.some((recipe) => recipe.id === id);
-
     return result;
   };
 
@@ -80,10 +79,11 @@ function RecipeDetails({
   };
 
   const updateBtnCheck = (object, favoriteItem) => {
-    object.some((item) => item.id === favoriteItem.id);
-    const removeObj = object.filter((e) => e.id !== favoriteItem.id);
-    localStorage.setItem('favoriteRecipes', JSON.stringify(removeObj));
-    setFavoriteRecipe(false);
+    if (object.some((item) => item.id === favoriteItem.id)) {
+      const removeObj = object.filter((e) => e.id !== favoriteItem.id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(removeObj));
+      setFavoriteRecipe(false);
+    }
   };
 
   const handleSetFavorite = () => {
@@ -100,7 +100,7 @@ function RecipeDetails({
         name: strMeal,
         image: strMealThumb,
       };
-      if (!favoriteRecipes || favoriteRecipes === []) {
+      if (!favoriteRecipes) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteMeal]));
         setFavoriteRecipe(true);
       } else {
