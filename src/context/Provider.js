@@ -21,6 +21,9 @@ function Provider({ children }) {
   const [recomendations, setRecomendations] = useState([]);
   const [donesRecipes, setDonesRecipes] = useState([]);
   const [filteredDonesRecipes, setFilteredDonesRecipes] = useState([]);
+  const [inProgressRecipe, setInProgressRecipe] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [favoriteRecipe, setFavoriteRecipe] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -160,6 +163,12 @@ function Provider({ children }) {
     filterRecipesDone,
     filteredDonesRecipes,
     firstLoadRecipesDone,
+    inProgressRecipe,
+    setInProgressRecipe,
+    copiedLink,
+    setCopiedLink,
+    favoriteRecipe,
+    setFavoriteRecipe,
   }), [
     email,
     password,
@@ -185,6 +194,9 @@ function Provider({ children }) {
     filterRecipesDone,
     filteredDonesRecipes,
     firstLoadRecipesDone,
+    inProgressRecipe,
+    copiedLink,
+    favoriteRecipe,
   ]);
 
   return (
