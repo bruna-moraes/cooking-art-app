@@ -162,6 +162,7 @@ function RecipeDetails({
           onClick={ clipboardCopy }
           src={ shareIcon }
           alt="shareicon"
+          style={ { marginLeft: 10, marginRight: 10 } }
         />
         <input
           type="image"

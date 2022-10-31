@@ -1,6 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../helpers/renderWithRouter';
 import App from '../App';
 import Provider from '../context/Provider';
@@ -12,10 +13,12 @@ const INST_TESTID = 'instructions';
 const VIDEO_TESTID = 'video';
 const RECOMENDATION_TESTID = '0-recommendation-card';
 const BTN_TESTID = 'start-recipe-btn';
+const FAVORITE_BTN_TESTID = 'favorite-btn';
 
 describe('Tela de Detalhes da Receita', () => {
   it('Verifica os elementos na tela de comidas', async () => {
     const { history } = renderWithRouter(<Provider><App /></Provider>);
+    jest.spyOn(localStorage, 'getItem');
 
     act(() => history.push('/meals/52771'));
     const image = await screen.findByTestId(IMG_TESTID);
@@ -38,6 +41,11 @@ describe('Tela de Detalhes da Receita', () => {
 
     const btn = await screen.findByTestId(BTN_TESTID);
     expect(btn).toBeInTheDocument();
+
+    const favoriteBtn = await screen.findByTestId(FAVORITE_BTN_TESTID);
+    expect(favoriteBtn).toBeInTheDocument();
+    userEvent.click(favoriteBtn);
+    expect(localStorage.getItem).toHaveBeenCalledWith('favoriteRecipes');
   });
 
   it('Verifica os elementos na tela de bebidas', async () => {
