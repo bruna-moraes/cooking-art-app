@@ -1,25 +1,39 @@
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
+import { useContext, useEffect, useCallback } from 'react';
 import MyContext from '../context/MyContext';
-
-import Meals from '../components/Meals';
-import Drinks from '../components/Drinks';
+import fetchDetailsApi from '../services/fetchDetailsApi';
 
 function RecipesInProgress({
-  location: { pathname },
+  history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { detailedRecipe, getRecipeIngredients } = useContext(MyContext);
+  const {
+    detailedRecipe,
+    getRecipeIngredients,
+    setDetailedRecipe } = useContext(MyContext);
   console.log(id);
   console.log(detailedRecipe);
 
+  const getPath = useCallback(() => {
+    if (pathname.includes('meals')) {
+      return 'themealdb';
+    }
+    if (pathname.includes('drinks')) {
+      return 'thecocktaildb';
+    }
+  }, [pathname]);
+
+  const getItem = useCallback(async () => {
+    const data = await fetchDetailsApi(getPath(), id);
+    setDetailedRecipe(data);
+  }, [id]);
+
+  useEffect(() => {
+    getItem();
+  }, [getItem]);
+
   return (
     <div>
-      {
-        pathname.includes('meals')
-          ? <Meals />
-          : <Drinks />
-      }
 
       <div>
         {
@@ -92,8 +106,10 @@ function RecipesInProgress({
 }
 
 RecipesInProgress.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
