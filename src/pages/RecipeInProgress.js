@@ -33,16 +33,13 @@ function RecipesInProgress({
     getItem();
   }, [getItem]);
 
-  const handleCheck = ({ target }) => {
-    const { checked, name } = target;
-    if (checked) {
-      const inputChecked = document.getElementById(name);
-      inputChecked.classList.add('checked');
-    } // else {
-    //   const inputChecked2 = document.getElementById(name);
-    //   inputChecked2.classList.add('volta');
-    // }
-  };
+  // const handleCheck = ({ target }) => {
+  //   const { checked, name } = target;
+  //   if (checked) {
+  //     const inputChecked = document.getElementById(name);
+  //     inputChecked.classList.add('checked');
+  //   }
+  // };
   return (
     <div>
 
@@ -74,18 +71,23 @@ function RecipesInProgress({
                       data-testid={ `${i}-ingredient-name-and-measure` }
                       id={ `${i}-ingredient-step` }
                     >
-                      { value }
+
                       <label
+                        className="check-label"
                         htmlFor={ `${i}-ingredient-step` }
+                        id={ `${i}-ingredient-step` }
                         data-testid={ `${i}-ingredient-step` }
                       >
+                        { value }
                         <input
+                          className="check-input"
                           type="checkbox"
                           name={ `${i}-ingredient-step` }
-                          onChange={ handleCheck }
+                          // onChange={ handleCheck }
                         />
                       </label>
-                    </li>))
+                    </li>
+                  ))
                 }
               </ol>
               <p data-testid="instructions">{ e.strInstructions }</p>

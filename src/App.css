@@ -1,3 +1,7 @@
+/* .check-label:has( .check-input:checked ) {
+  text-decoration: line-through solid black;
+} */
+
 .meals {
   align-items: center;
   background: #0fa36b;
