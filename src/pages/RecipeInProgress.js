@@ -1,3 +1,4 @@
+import '../styles/RecipeInProgress.css';
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useCallback } from 'react';
 import MyContext from '../context/MyContext';
@@ -32,6 +33,16 @@ function RecipesInProgress({
     getItem();
   }, [getItem]);
 
+  const handleCheck = ({ target }) => {
+    const { checked, name } = target;
+    if (checked) {
+      const inputChecked = document.getElementById(name);
+      inputChecked.classList.add('checked');
+    } // else {
+    //   const inputChecked2 = document.getElementById(name);
+    //   inputChecked2.classList.add('volta');
+    // }
+  };
   return (
     <div>
 
@@ -61,15 +72,17 @@ function RecipesInProgress({
                     <li
                       key={ i }
                       data-testid={ `${i}-ingredient-name-and-measure` }
+                      id={ `${i}-ingredient-step` }
                     >
                       { value }
                       <label
-                        htmlFor="check"
+                        htmlFor={ `${i}-ingredient-step` }
                         data-testid={ `${i}-ingredient-step` }
                       >
                         <input
-                          name="check"
                           type="checkbox"
+                          name={ `${i}-ingredient-step` }
+                          onChange={ handleCheck }
                         />
                       </label>
                     </li>))
