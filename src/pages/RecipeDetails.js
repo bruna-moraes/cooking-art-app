@@ -1,18 +1,31 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
-import Meals from '../components/Meals';
-import Drinks from '../components/Drinks';
+import { Link } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
 import fetchRecomendations from '../services/fetchRecomendations';
 import Recomendations from '../components/Recomendations';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-function RecipesDetails({
+const copy = require('clipboard-copy');
+
+function RecipeDetails({
   history: { location: { pathname } },
   match: { params: { id } },
 }) {
-  const { setDetailedRecipe, setRecomendations } = useContext(MyContext);
+  const {
+    setDetailedRecipe,
+    setRecomendations,
+    inProgressRecipe,
+    setInProgressRecipe,
+    copiedLink,
+    setCopiedLink,
+    detailedRecipe,
+    favoriteRecipe,
+    setFavoriteRecipe } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -33,32 +46,152 @@ function RecipesDetails({
     setRecomendations(data);
   }, [setRecomendations, pathname]);
 
+  const handleDisableBtn = () => {
+    const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    const result = recipes.some((recipe) => recipe.id === id);
+    return result;
+  };
+
+  const inProgressCheck = useCallback(() => {
+    let type;
+
+    if (pathname.includes('meals')) {
+      type = 'meals';
+    }
+
+    if (pathname.includes('drinks')) {
+      type = 'drinks';
+    }
+
+    const inProgressRecipes = localStorage.getItem('inProgressRecipes')
+      ? JSON.parse(localStorage.getItem('inProgressRecipes'))
+      : { drinks: {}, meals: {} };
+
+    const check = (
+      Object.keys(inProgressRecipes[type]).some((recipeId) => recipeId === id));
+
+    if (check === true) setInProgressRecipe(true);
+  }, [id, pathname, setInProgressRecipe]);
+
+  const clipboardCopy = () => {
+    copy(window.location.href);
+    setCopiedLink(true);
+  };
+
+  const updateBtnCheck = (object, favoriteItem) => {
+    if (object.some((item) => item.id === favoriteItem.id)) {
+      const removeObj = object.filter((e) => e.id !== favoriteItem.id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(removeObj));
+      setFavoriteRecipe(false);
+    }
+  };
+
+  const handleSetFavorite = () => {
+    const favoriteRecipes = localStorage.getItem('favoriteRecipes');
+
+    if (pathname.includes('meals')) {
+      const { idMeal, strArea, strCategory, strMeal, strMealThumb } = detailedRecipe[0];
+      const favoriteMeal = {
+        id: idMeal,
+        type: 'meal',
+        nationality: strArea || '',
+        category: strCategory,
+        alcoholicOrNot: '',
+        name: strMeal,
+        image: strMealThumb,
+      };
+      if (!favoriteRecipes) {
+        localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteMeal]));
+        setFavoriteRecipe(true);
+      } else {
+        const parsedObj = JSON.parse(favoriteRecipes);
+        localStorage.setItem('favoriteRecipes', JSON
+          .stringify([...parsedObj, favoriteMeal]));
+        setFavoriteRecipe(true);
+        updateBtnCheck(parsedObj, favoriteMeal);
+      }
+    }
+
+    if (pathname.includes('drinks')) {
+      const { idDrink, strArea, strCategory,
+        strAlcoholic, strDrink, strDrinkThumb } = detailedRecipe[0];
+      const favoriteDrink = {
+        id: idDrink,
+        type: 'drink',
+        nationality: strArea || '',
+        category: strCategory || '',
+        alcoholicOrNot: strAlcoholic,
+        name: strDrink,
+        image: strDrinkThumb,
+      };
+      if (!favoriteRecipes) {
+        localStorage.setItem('favoriteRecipes', JSON.stringify([favoriteDrink]));
+        setFavoriteRecipe(true);
+      } else {
+        const parsedObj = JSON.parse(favoriteRecipes);
+        localStorage.setItem('favoriteRecipes', JSON
+          .stringify([...parsedObj, favoriteDrink]));
+        setFavoriteRecipe(true);
+        updateBtnCheck(parsedObj, favoriteDrink);
+      }
+    }
+  };
+
+  const favoriteCheck = useCallback(() => {
+    const favoriteRecipes = localStorage.getItem('favoriteRecipes')
+      ? JSON.parse(localStorage.getItem('favoriteRecipes'))
+      : [{ id: '' }];
+
+    const check = favoriteRecipes.some((recipe) => recipe.id === id);
+    setFavoriteRecipe(check);
+  }, [id, setFavoriteRecipe]);
+
   useEffect(() => {
     getItem();
     getRecomendations();
-  }, [getItem, getRecomendations]);
+    inProgressCheck();
+    favoriteCheck();
+  }, [getItem, getRecomendations, inProgressCheck, favoriteCheck]);
 
   return (
     <div>
-      {
-        pathname.includes('meals')
-          ? <Meals />
-          : <Drinks />
-      }
+      <div>
+        <input
+          type="image"
+          data-testid="share-btn"
+          onClick={ clipboardCopy }
+          src={ shareIcon }
+          alt="shareicon"
+          style={ { marginLeft: 10, marginRight: 10 } }
+        />
+        <input
+          type="image"
+          data-testid="favorite-btn"
+          onClick={ handleSetFavorite }
+          src={ favoriteRecipe ? blackHeartIcon : whiteHeartIcon }
+          alt="favorite-icon"
+        />
+        {
+          copiedLink ? <p>Link copied!</p> : null
+        }
+      </div>
       <DetailedRecipeCard />
       <Recomendations />
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="start-recipe-btn"
-      >
-        Iniciar Receita
-      </button>
+      <Link to={ `${pathname}/in-progress` }>
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="start-recipe-btn"
+          disabled={ handleDisableBtn }
+        >
+          { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
+        </button>
+      </Link>
     </div>
   );
 }
 
-RecipesDetails.propTypes = {
+RecipeDetails.propTypes = {
   history: PropTypes.shape({
     location: PropTypes.shape({
       pathname: PropTypes.string,
@@ -71,4 +204,4 @@ RecipesDetails.propTypes = {
   }).isRequired,
 };
 
-export default RecipesDetails;
+export default RecipeDetails;
