@@ -133,6 +133,30 @@ function Provider({ children }) {
     setInputVisivel(!inputVisivel);
   }, [inputVisivel]);
 
+  const getRecipeIngredients = useCallback(() => {
+    const ingredients = Object.entries(detailedRecipe[0]).filter(
+      ([key, value]) => (key.includes('strIngredient') || key.includes('strMeasure'))
+        && value !== '' && value,
+    );
+
+    const ingredientName = ingredients.reduce((acc, [key, value]) => {
+      if (key.includes('strIngredient')) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    const ingredientsQuantity = ingredients.reduce((acc, [key, value]) => {
+      if (key.includes('strMeasure')) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    return Object.values(ingredientName)
+      .map((ingredient, i) => `${ingredient} ${Object.values(ingredientsQuantity)[i]}`);
+  }, [detailedRecipe]);
+
   const context = useMemo(() => ({
     email,
     password,
@@ -169,6 +193,7 @@ function Provider({ children }) {
     setCopiedLink,
     favoriteRecipe,
     setFavoriteRecipe,
+    getRecipeIngredients,
   }), [
     email,
     password,
@@ -197,6 +222,7 @@ function Provider({ children }) {
     inProgressRecipe,
     copiedLink,
     favoriteRecipe,
+    getRecipeIngredients,
   ]);
 
   return (
