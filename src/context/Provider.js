@@ -19,6 +19,8 @@ function Provider({ children }) {
   const [redirect, setRedirect] = useState(false);
   const [detailedRecipe, setDetailedRecipe] = useState([]);
   const [recomendations, setRecomendations] = useState([]);
+  const [donesRecipes, setDonesRecipes] = useState([]);
+  const [filteredDonesRecipes, setFilteredDonesRecipes] = useState([]);
   const [inProgressRecipe, setInProgressRecipe] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [favoriteRecipe, setFavoriteRecipe] = useState(false);
@@ -34,6 +36,55 @@ function Provider({ children }) {
     };
     handleValidate();
   }, [email, password]);
+
+  const firstLoadRecipesDone = useCallback(() => {
+    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
+    // const doneRecipes = [
+    //   {
+    //     id: 52977,
+    //     type: 'meal',
+    //     nationality: 'Turkish',
+    //     category: 'Side',
+    //     alcoholicOrNot: '',
+    //     name: 'Corba',
+    //     image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
+    //     doneDate: '28/10/2020',
+    //     tags: ['Soup', 'liquid'],
+    //   },
+    //   {
+    //     id: 15997,
+    //     type: 'drink',
+    //     nationality: '',
+    //     category: 'Ordinary Drink',
+    //     alcoholicOrNot: 'Optional alcohol',
+    //     name: 'GG',
+    //     image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+    //     doneDate: '28/10/2020',
+    //     tags: ['Soup'],
+    //   },
+    // ];
+
+    setDonesRecipes(doneRecipes);
+    setFilteredDonesRecipes(doneRecipes);
+  }, []);
+
+  const filterRecipesDone = useCallback((event) => {
+    const filterName = event.target.innerHTML;
+
+    const doneRecipesFiltered = donesRecipes.filter((doneRecipe) => {
+      if (filterName === 'Meals') {
+        return doneRecipe.type === 'meal';
+      }
+
+      if (filterName === 'Drinks') {
+        return doneRecipe.type === 'drink';
+      }
+
+      return donesRecipes;
+    });
+
+    setFilteredDonesRecipes(doneRecipesFiltered);
+  }, [donesRecipes]);
 
   const handleChangeEmail = useCallback(({ target }) => {
     const { value } = target;
@@ -133,6 +184,9 @@ function Provider({ children }) {
     setDetailedRecipe,
     recomendations,
     setRecomendations,
+    filterRecipesDone,
+    filteredDonesRecipes,
+    firstLoadRecipesDone,
     inProgressRecipe,
     setInProgressRecipe,
     copiedLink,
@@ -162,6 +216,9 @@ function Provider({ children }) {
     detailedRecipe,
     setDetailedRecipe,
     recomendations,
+    filterRecipesDone,
+    filteredDonesRecipes,
+    firstLoadRecipesDone,
     inProgressRecipe,
     copiedLink,
     favoriteRecipe,
