@@ -26,7 +26,7 @@ function RecipesInProgress({
   const getItem = useCallback(async () => {
     const data = await fetchDetailsApi(getPath(), id);
     setDetailedRecipe(data);
-  }, [id]);
+  }, [id, setDetailedRecipe, getPath]);
 
   useEffect(() => {
     getItem();
