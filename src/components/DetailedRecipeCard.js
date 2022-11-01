@@ -2,31 +2,7 @@ import { useContext } from 'react';
 import MyContext from '../context/MyContext';
 
 export default function DetailedRecipeCard() {
-  const { detailedRecipe } = useContext(MyContext);
-
-  const getRecipeIngredients = () => {
-    const ingredients = Object.entries(detailedRecipe[0]).filter(
-      ([key, value]) => (key.includes('strIngredient') || key.includes('strMeasure'))
-        && value !== '' && value,
-    );
-
-    const ingredientName = ingredients.reduce((acc, [key, value]) => {
-      if (key.includes('strIngredient')) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {});
-
-    const ingredientsQuantity = ingredients.reduce((acc, [key, value]) => {
-      if (key.includes('strMeasure')) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {});
-
-    return Object.values(ingredientName)
-      .map((ingredient, i) => `${ingredient} ${Object.values(ingredientsQuantity)[i]}`);
-  };
+  const { detailedRecipe, getRecipeIngredients } = useContext(MyContext);
 
   return (
     <div>
