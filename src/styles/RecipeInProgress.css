@@ -1,0 +1,15 @@
+.check-label:has( .check-input:checked ) {
+  text-decoration: line-through solid black;
+}
+
+/* .checked {
+  text-decoration: line-through solid black;
+} */
+
+/* .checkbox input:checked {
+  text-decoration: line-through solid black;
+}
+
+.checked {
+  text-decoration: line-through solid black;
+} */
