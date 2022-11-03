@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import clipboardCopy from 'clipboard-copy';
 import MyContext from '../context/MyContext';
 import fetchDetailsApi from '../services/fetchDetailsApi';
 import DetailedRecipeCard from '../components/DetailedRecipeCard';
@@ -9,8 +10,6 @@ import Recomendations from '../components/Recomendations';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-
-const copy = require('clipboard-copy');
 
 function RecipeDetails({
   history: { location: { pathname } },
@@ -25,7 +24,9 @@ function RecipeDetails({
     setCopiedLink,
     detailedRecipe,
     favoriteRecipe,
-    setFavoriteRecipe } = useContext(MyContext);
+    setFavoriteRecipe,
+    hiddenStartBtn,
+    setHiddenStartBtn } = useContext(MyContext);
 
   const getPath = useCallback(() => {
     if (pathname.includes('meals')) {
@@ -46,11 +47,13 @@ function RecipeDetails({
     setRecomendations(data);
   }, [setRecomendations, pathname]);
 
-  const handleDisableBtn = () => {
-    const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  const hideStartBtn = useCallback(() => {
+    const recipes = localStorage.getItem('doneRecipes')
+      ? JSON.parse(localStorage.getItem('doneRecipes'))
+      : [{}];
     const result = recipes.some((recipe) => recipe.id === id);
-    return result;
-  };
+    setHiddenStartBtn(result);
+  }, [id, setHiddenStartBtn]);
 
   const inProgressCheck = useCallback(() => {
     let type;
@@ -73,8 +76,8 @@ function RecipeDetails({
     if (check === true) setInProgressRecipe(true);
   }, [id, pathname, setInProgressRecipe]);
 
-  const clipboardCopy = () => {
-    copy(window.location.href);
+  const copy = () => {
+    clipboardCopy(window.location.href);
     setCopiedLink(true);
   };
 
@@ -151,7 +154,8 @@ function RecipeDetails({
     getRecomendations();
     inProgressCheck();
     favoriteCheck();
-  }, [getItem, getRecomendations, inProgressCheck, favoriteCheck]);
+    hideStartBtn();
+  }, [getItem, getRecomendations, inProgressCheck, favoriteCheck, hideStartBtn]);
 
   return (
     <div>
@@ -159,7 +163,7 @@ function RecipeDetails({
         <input
           type="image"
           data-testid="share-btn"
-          onClick={ clipboardCopy }
+          onClick={ copy }
           src={ shareIcon }
           alt="shareicon"
           style={ { marginLeft: 10, marginRight: 10 } }
@@ -177,16 +181,22 @@ function RecipeDetails({
       </div>
       <DetailedRecipeCard />
       <Recomendations />
-      <Link to={ `${pathname}/in-progress` }>
-        <button
-          type="button"
-          data-testid="start-recipe-btn"
-          className="start-recipe-btn"
-          disabled={ handleDisableBtn }
-        >
-          { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
-        </button>
-      </Link>
+      {
+        hiddenStartBtn
+          ? null
+          : (
+            <Link to={ `${pathname}/in-progress` }>
+              <button
+                type="button"
+                data-testid="start-recipe-btn"
+                className="start-recipe-btn"
+              >
+                { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
+              </button>
+            </Link>
+          )
+      }
+
     </div>
   );
 }

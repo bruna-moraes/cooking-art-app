@@ -1,10 +1,11 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import renderWithRouter from '../helpers/renderWithRouter';
 import App from '../App';
 import Provider from '../context/Provider';
+import mockFavoriteRecipe from '../mocks/mockFavoriteRecipe';
 
 const IMG_TESTID = 'recipe-photo';
 const TITLE_TESTID = 'recipe-title';
@@ -12,15 +13,14 @@ const CATEGORY_TESTID = 'recipe-category';
 const INST_TESTID = 'instructions';
 const VIDEO_TESTID = 'video';
 const RECOMENDATION_TESTID = '0-recommendation-card';
-const BTN_TESTID = 'start-recipe-btn';
-const FAVORITE_BTN_TESTID = 'favorite-btn';
+const RECIPE_BTN = 'start-recipe-btn';
+const mealMock = '/meals/52771';
 
 describe('Tela de Detalhes da Receita', () => {
   it('Verifica os elementos na tela de comidas', async () => {
     const { history } = renderWithRouter(<Provider><App /></Provider>);
-    jest.spyOn(localStorage, 'getItem');
 
-    act(() => history.push('/meals/52771'));
+    act(() => history.push(mealMock));
     const image = await screen.findByTestId(IMG_TESTID);
     expect(image).toBeInTheDocument();
 
@@ -38,14 +38,6 @@ describe('Tela de Detalhes da Receita', () => {
 
     const recomendation = await screen.findByTestId(RECOMENDATION_TESTID);
     expect(recomendation).toBeInTheDocument();
-
-    const btn = await screen.findByTestId(BTN_TESTID);
-    expect(btn).toBeInTheDocument();
-
-    const favoriteBtn = await screen.findByTestId(FAVORITE_BTN_TESTID);
-    expect(favoriteBtn).toBeInTheDocument();
-    userEvent.click(favoriteBtn);
-    expect(localStorage.getItem).toHaveBeenCalledWith('favoriteRecipes');
   });
 
   it('Verifica os elementos na tela de bebidas', async () => {
@@ -66,9 +58,44 @@ describe('Tela de Detalhes da Receita', () => {
 
     const recomendation = await screen.findByTestId(RECOMENDATION_TESTID);
     expect(recomendation).toBeInTheDocument();
+  });
 
-    const btn = await screen.findByTestId(BTN_TESTID);
+  it('Testa alteração do texto no botão de iniciar/continuar receita', () => {
+    const inProgressStorage = { drinks: {}, meals: { 52771: [] } };
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressStorage));
+
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
+
+    act(() => history.push(mealMock));
+
+    const btn = screen.getByRole('button', { name: /continue recipe/i });
     expect(btn).toBeInTheDocument();
-    expect(btn).not.toHaveAttribute('disabled');
+  });
+
+  it('Testa funcionalidade de desabilitar o botão caso receita esteja feita', async () => {
+    const doneStorage = [{ id: 52771 }];
+    localStorage.setItem('doneRecipes', JSON.stringify(doneStorage));
+
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
+
+    act(() => history.push(mealMock));
+
+    const btn = screen.getByTestId(RECIPE_BTN);
+    await waitFor(() => expect(btn).not.toBeVisible());
+  });
+
+  it('Testa interação do botão de favorito com localStorage', async () => {
+    localStorage.setItem('favoriteRecipes', mockFavoriteRecipe);
+
+    jest.spyOn(Object.getPrototypeOf(global.localStorage), 'getItem').mockReturnValue(JSON.stringify(mockFavoriteRecipe));
+
+    const { history } = renderWithRouter(<Provider><App /></Provider>);
+
+    act(() => history.push(mealMock));
+
+    const favoriteBtn = screen.getByRole('button', { name: /favorite-icon/i });
+    userEvent.click(favoriteBtn);
+
+    expect(localStorage.getItem).toHaveBeenCalled();
   });
 });
