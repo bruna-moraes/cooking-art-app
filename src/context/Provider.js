@@ -24,6 +24,7 @@ function Provider({ children }) {
   const [inProgressRecipe, setInProgressRecipe] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [favoriteRecipe, setFavoriteRecipe] = useState(false);
+  const [hiddenStartBtn, setHiddenStartBtn] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -193,6 +194,8 @@ function Provider({ children }) {
     setCopiedLink,
     favoriteRecipe,
     setFavoriteRecipe,
+    hiddenStartBtn,
+    setHiddenStartBtn,
     getRecipeIngredients,
   }), [
     email,
@@ -222,6 +225,7 @@ function Provider({ children }) {
     inProgressRecipe,
     copiedLink,
     favoriteRecipe,
+    hiddenStartBtn,
     getRecipeIngredients,
   ]);
 
