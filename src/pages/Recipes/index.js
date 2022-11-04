@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
-import Meals from '../components/Meals';
-import Drinks from '../components/Drinks';
+import Meals from '../../components/Meals';
+import Drinks from '../../components/Drinks';
 
 function Recipes({ location: { pathname } }) {
   return (

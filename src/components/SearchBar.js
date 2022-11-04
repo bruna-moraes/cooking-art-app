@@ -42,18 +42,32 @@ function SearchBar({ title }) {
   }
 
   return (
-    <section>
-      <label htmlFor="search-input">
-        <input
-          type="text"
-          placeholder="Pesquisa"
-          data-testid="search-input"
-          id="search-input"
-          name="headerSearchValue"
-          onChange={ handleSearchValue }
-        />
-      </label>
-      <div>
+    <section className="search-bar-container">
+      <div className="search-bar-top">
+        <label
+          htmlFor="search-input"
+          className="search-bar-label"
+        >
+          <input
+            className="search-bar-input"
+            type="text"
+            placeholder="Search"
+            data-testid="search-input"
+            id="search-input"
+            name="headerSearchValue"
+            onChange={ handleSearchValue }
+          />
+        </label>
+        <button
+          className="search-bar-button primary-button-enable"
+          type="button"
+          data-testid="exec-search-btn"
+          onClick={ () => handleClickFetch(title) }
+        >
+          Search
+        </button>
+      </div>
+      <div className="search-bar-radio-buttons">
         <label htmlFor="ingredient-search-radio">
           <input
             type="radio"
@@ -88,13 +102,6 @@ function SearchBar({ title }) {
           Primeira letra
         </label>
       </div>
-      <button
-        type="button"
-        data-testid="exec-search-btn"
-        onClick={ () => handleClickFetch(title) }
-      >
-        Pesquisar
-      </button>
     </section>
   );
 }

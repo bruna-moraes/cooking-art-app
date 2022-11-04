@@ -1,0 +1,72 @@
+.login-page {
+  background-image: url('../../images/backgroundLogin.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: rgb(240, 244, 245);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+}
+
+.login-content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.information-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.information-container h1 {
+  font-family: Acme , sans-serif;
+  font-size: 32px;
+  text-align: center;
+}
+
+.information-container span {
+  display: flex;
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 80%;
+}
+
+.input-email, .input-password {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  color: white;
+  padding: 6px 6px 6px 12px;
+  width: 100%;
+}
+
+.input-email::placeholder, .input-password::placeholder {
+  color: rgb(214, 217, 218);
+}
+
+.input-email:focus, .input-password:focus {
+  border: 2px solid rgba(255, 134, 88, 1);
+  outline: none;
+}
+
+.buttons-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.divider {
+  background-color: white;
+  height: 1.5px;
+  width: 70%;
+}

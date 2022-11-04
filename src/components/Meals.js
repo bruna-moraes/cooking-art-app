@@ -7,6 +7,8 @@ import MyContext from '../context/MyContext';
 import RecipeCard from './RecipeCard';
 import CategoryButton from './CategoryButton';
 
+import '../pages/Recipes/index.css';
+
 function Meals() {
   const {
     fetchedItems,
@@ -22,45 +24,52 @@ function Meals() {
   }, [firstLoadFetch, loadCategories]);
 
   return (
-    <div>
+    <div className="recipe-page page">
+
       <Header title="Meals" />
 
-      <div>
-        {
-          categories.map(({ strCategory }) => (
-            <CategoryButton
-              key={ strCategory }
-              name={ strCategory }
-              onClick={ () => filterRecipesByCategory('Meals', strCategory) }
-            />
-          ))
-        }
-
-        <button
-          type="button"
-          data-testid="All-category-filter"
-          onClick={ () => filterRecipesByCategory('Meals', 'All') }
-        >
-          All
-        </button>
-      </div>
-
-      {
-        fetchedItems.map((meal, index) => (
-          <Link
-            key={ meal.idMeal }
-            to={ `/meals/${meal.idMeal}` }
+      <main className="recipe-main-content">
+        <nav className="recipe-categories-nav">
+          <button
+            className="recipe-category-button"
+            type="button"
+            data-testid="All-category-filter"
+            onClick={ () => filterRecipesByCategory('Meals', 'All') }
           >
-            <RecipeCard
-              recipe={ {
-                name: meal.strMeal,
-                image: meal.strMealThumb,
-              } }
-              index={ index }
-            />
-          </Link>
-        ))
-      }
+            All
+          </button>
+          {
+            categories.map(({ strCategory }) => (
+              <CategoryButton
+                key={ strCategory }
+                name={ strCategory }
+                onClick={ () => filterRecipesByCategory('Meals', strCategory) }
+              />
+            ))
+          }
+        </nav>
+
+        <section className="recipes-cards-list">
+          {
+            fetchedItems.map((meal, index) => (
+              <Link
+                className="recipe-card-link"
+                key={ meal.idMeal }
+                to={ `/meals/${meal.idMeal}` }
+              >
+                <RecipeCard
+                  recipe={ {
+                    name: meal.strMeal,
+                    image: meal.strMealThumb,
+                  } }
+                  index={ index }
+                />
+              </Link>
+            ))
+          }
+        </section>
+      </main>
+
       <Footer />
     </div>
   );

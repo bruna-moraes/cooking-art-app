@@ -1,14 +1,18 @@
 import PropTypes from 'prop-types';
 import { useCallback, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import MyContext from '../context/MyContext';
-import fetchDetailsApi from '../services/fetchDetailsApi';
-import DetailedRecipeCard from '../components/DetailedRecipeCard';
-import fetchRecomendations from '../services/fetchRecomendations';
-import Recomendations from '../components/Recomendations';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
+
+import MyContext from '../../context/MyContext';
+import fetchDetailsApi from '../../services/fetchDetailsApi';
+import DetailedRecipeCard from '../../components/DetailedRecipeCard';
+import fetchRecomendations from '../../services/fetchRecomendations';
+import Recomendations from '../../components/Recomendations';
+
+import shareIcon from '../../images/shareIcon.svg';
+import whiteHeartIcon from '../../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../../images/blackHeartIcon.svg';
+
+import './index.css';
 
 const copy = require('clipboard-copy');
 
@@ -154,15 +158,14 @@ function RecipeDetails({
   }, [getItem, getRecomendations, inProgressCheck, favoriteCheck]);
 
   return (
-    <div>
-      <div>
+    <div className="recipe-details-page page">
+      <div className="interactions-recipe">
         <input
           type="image"
           data-testid="share-btn"
           onClick={ clipboardCopy }
           src={ shareIcon }
           alt="shareicon"
-          style={ { marginLeft: 10, marginRight: 10 } }
         />
         <input
           type="image"
@@ -171,22 +174,24 @@ function RecipeDetails({
           src={ favoriteRecipe ? blackHeartIcon : whiteHeartIcon }
           alt="favorite-icon"
         />
-        {
-          copiedLink ? <p>Link copied!</p> : null
-        }
       </div>
-      <DetailedRecipeCard />
-      <Recomendations />
-      <Link to={ `${pathname}/in-progress` }>
-        <button
-          type="button"
-          data-testid="start-recipe-btn"
-          className="start-recipe-btn"
-          disabled={ handleDisableBtn }
-        >
-          { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
-        </button>
-      </Link>
+      {
+        copiedLink ? <p>Link copied!</p> : null
+      }
+      <main className="recipe-details-main-content">
+        <DetailedRecipeCard />
+        <Recomendations />
+        <Link to={ `${pathname}/in-progress` }>
+          <button
+            type="button"
+            data-testid="start-recipe-btn"
+            className="start-recipe-button primary-button-enable"
+            disabled={ handleDisableBtn }
+          >
+            { inProgressRecipe ? 'Continue Recipe' : 'Start Recipe' }
+          </button>
+        </Link>
+      </main>
     </div>
   );
 }

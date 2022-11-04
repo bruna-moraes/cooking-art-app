@@ -2,12 +2,15 @@ import { useContext } from 'react';
 
 import MyContext from '../context/MyContext';
 
+import '../pages/DoneRecipes/index.css';
+
 function FiltersDoneRecipes() {
   const { filterRecipesDone } = useContext(MyContext);
 
   return (
-    <nav>
+    <nav className="categories-filters">
       <button
+        className="recipe-category-button"
         type="button"
         data-testid="filter-by-all-btn"
         onClick={ filterRecipesDone }
@@ -16,6 +19,7 @@ function FiltersDoneRecipes() {
       </button>
 
       <button
+        className="recipe-category-button"
         type="button"
         data-testid="filter-by-meal-btn"
         onClick={ filterRecipesDone }
@@ -24,6 +28,7 @@ function FiltersDoneRecipes() {
       </button>
 
       <button
+        className="recipe-category-button"
         type="button"
         data-testid="filter-by-drink-btn"
         onClick={ filterRecipesDone }

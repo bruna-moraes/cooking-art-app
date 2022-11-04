@@ -1,0 +1,43 @@
+.recipe-details-main-content {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.interactions-recipe {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 24px;
+  width: 80%;
+}
+
+.image-recipe {
+  border-radius: 32px;
+  filter: drop-shadow(0 8.341px 8.341px rgba(30, 30, 30, 0.15));
+  width: 300px;
+}
+
+.name-recipe-text {
+  align-items: flex-end;
+  display: flex;
+  gap: 4px;
+  padding: 24px 0;
+}
+
+.name-recipe-text h2, .name-recipe-text p {
+  margin: 0;
+  padding: 0;
+}
+
+.instructions-video {
+  border-radius: 16px;
+  height: 200px;
+  margin: 40px 0;
+  width: 300px;
+}
+
+.start-recipe-button {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+}

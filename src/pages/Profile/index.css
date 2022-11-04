@@ -1,0 +1,36 @@
+.profile-page {
+  height: 100vh;
+}
+
+.profile-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-top: 50px;
+  padding-bottom: 72px;
+}
+
+.profile-information {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-text {
+  display: flex;
+  gap: 4px;
+}
+
+.email-text {
+  font-weight: 700;
+}
+
+.profile-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
