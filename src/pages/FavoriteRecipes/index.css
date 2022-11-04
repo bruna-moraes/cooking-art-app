@@ -1,0 +1,8 @@
+.interactions-recipe-card {
+  display: flex;
+  justify-content: space-around;
+}
+
+.recipe-information h6 {
+  text-align: center;
+}

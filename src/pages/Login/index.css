@@ -17,9 +17,20 @@
 }
 
 .information-container {
+  align-items: center;
   display: flex;
   flex-direction: column;
   width: 80%;
+}
+
+.logo-image {
+  padding: 0 0 8px 10px;
+  width: 80px;
+}
+
+.logo-text {
+  padding-bottom: 8px;
+  width: 180px;
 }
 
 .information-container h1 {

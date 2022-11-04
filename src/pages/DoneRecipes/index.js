@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react';
+
 import Header from '../../components/Header';
 import DoneRecipeCard from '../../components/DoneRecipeCard';
 import FiltersDoneRecipes from '../../components/FiltersDoneRecipes';
 import MyContext from '../../context/MyContext';
+import Footer from '../../components/Footer';
 
 import './index.css';
-import Footer from '../../components/Footer';
 
 function DoneRecipes() {
   const { filteredDonesRecipes, firstLoadRecipesDone } = useContext(MyContext);

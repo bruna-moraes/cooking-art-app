@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import MyContext from '../../context/MyContext';
 
 import './index.css';
+import logotipo from '../../images/logo-recipe-app.svg';
+import logotipoText from '../../images/logo-text.svg';
 
 function Login() {
   const {
@@ -17,8 +19,19 @@ function Login() {
     <div className="login-page">
       <div className="login-content">
         <div className="information-container">
-          <h1>Aprenda a cozinhar como um Chef</h1>
-          <span>Encontre diversos tipos de culinária ao redor do mundo!</span>
+          <img
+            className="logo-image"
+            alt="logotipo-recipe-app"
+            src={ logotipo }
+          />
+          <img
+            className="logo-text"
+            alt="logotipo-recipe-app"
+            src={ logotipoText }
+          />
+          <span>
+            Experimente diversas culinárias ao redor do mundo enquanto cria lembranças!
+          </span>
         </div>
         <form className="form-content">
           <label htmlFor="Email">
